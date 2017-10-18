@@ -30,22 +30,34 @@ class Signup extends Component {
             component={renderInput}
           />
         </fieldset>
+        <button action="submit" className="btn btn-primary">Sign up</button>
       </form>
     )
   }
 }
 
 const renderInput = field => {
-  const { input, type } = field
+  const { input, type, meta: { error, dirty } } = field
   return (
     <div>
       <input {...input} type={type} className="form-control" />
+      { error && dirty && <div className="error">{error}</div> }
     </div>
   )
 }
 
+function validate (value) {
+  const errors = {}
+  const { password, passwordConfirm } = value
+  if (password !== passwordConfirm) {
+    errors.passwordConfirm = 'Passwords must match'
+  }
+  return errors
+}
+
 export default reduxForm(
   {
-    form: 'signup'
+    form: 'signup',
+    validate
   }
 )(Signup)
