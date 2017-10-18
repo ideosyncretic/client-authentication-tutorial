@@ -37,18 +37,31 @@ class Signup extends Component {
 }
 
 const renderInput = field => {
-  const { input, type, meta: { error, dirty } } = field
+  const { input, type, meta: { error, touched } } = field
   return (
     <div>
       <input {...input} type={type} className="form-control" />
-      { error && dirty && <div className="error">{error}</div> }
+      { error && touched && <div className="error">{error}</div> }
     </div>
   )
 }
 
 function validate (value) {
   const errors = {}
-  const { password, passwordConfirm } = value
+  const { email, password, passwordConfirm } = value
+
+  if (!email) {
+    errors.email = 'Please enter an email'
+  }
+
+  if (!password) {
+    errors.password = 'Please enter a password'
+  }
+
+  if (!passwordConfirm) {
+    errors.passwordConfirm = 'Please confirm your password'
+  }
+
   if (password !== passwordConfirm) {
     errors.passwordConfirm = 'Passwords must match'
   }
