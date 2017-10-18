@@ -12,13 +12,12 @@ export function signinUser ({ email, password }) {
     axios.post(`${ROOT_URL}/signin`, { email, password })
       .then(response => {
         // If request is good...
-        // Update state to indicate user is auth'd
-        dispatch({ type: AUTH_USER })
         // Save the JWT
         localStorage.setItem('token', response.data.token)
         // Redirect to the route "/feature"
-        console.log('hi')
         browserHistory.push('/feature')
+        // Update state to indicate user is auth'd
+        dispatch({ type: AUTH_USER })
       })
       .catch(() => {
         // If request is bad...
