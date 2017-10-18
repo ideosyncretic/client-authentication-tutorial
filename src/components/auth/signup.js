@@ -1,12 +1,17 @@
 import React, { Component } from 'react'
 import { Field, reduxForm } from 'redux-form'
+import { connect } from 'react-redux'
 import * as actions from '../../actions'
 
 class Signup extends Component {
+  handleSignup (formData) {
+    // call action creator to sign up the user
+    this.props.signupUser(formData)
+  }
   render () {
     const { handleSubmit } = this.props
     return (
-      <form>
+      <form onSubmit={handleSubmit(this.handleSignup.bind(this))}>
         <fieldset className="form-group">
           <label>Email:</label>
           <Field
@@ -46,9 +51,9 @@ const renderInput = field => {
   )
 }
 
-function validate (value) {
+function validate (formData) {
   const errors = {}
-  const { email, password, passwordConfirm } = value
+  const { email, password, passwordConfirm } = formData
 
   if (!email) {
     errors.email = 'Please enter an email'
@@ -68,9 +73,11 @@ function validate (value) {
   return errors
 }
 
-export default reduxForm(
-  {
-    form: 'signup',
-    validate
-  }
-)(Signup)
+Signup = connect(null, actions)(Signup)
+
+Signup = reduxForm({
+  form: 'signup',
+  validate
+})(Signup)
+
+export default Signup
