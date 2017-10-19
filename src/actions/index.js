@@ -16,12 +16,12 @@ export function signinUser ({ email, password }) {
     axios.post(`${ROOT_URL}/signin`, { email, password })
       .then(response => {
         // If request is good...
+        // Update state to indicate user is auth'd
+        dispatch({ type: AUTH_USER })
         // Save the JWT
         localStorage.setItem('token', response.data.token)
         // Redirect to the route "/feature"
         browserHistory.push('/feature')
-        // Update state to indicate user is auth'd
-        dispatch({ type: AUTH_USER })
       })
       .catch(() => {
         // If request is bad...
@@ -34,6 +34,15 @@ export function signinUser ({ email, password }) {
 export function signupUser ({ email, password }) {
   return function (dispatch) {
     axios.post(`${ROOT_URL}/signup`, { email, password })
+      .then(response => {
+        dispatch({ type: AUTH_USER })
+        localStorage.setItem('token', response.data.token)
+        browserHistory.push('/feature')
+      })
+      .catch(error => {
+        // access the error property from server response
+        dispatch(authError(error.response.data.error))
+      })
   }
 }
 
